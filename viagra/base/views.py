@@ -96,3 +96,9 @@ def afhaalactie(request):
 
     context = {'collections': collectionlijst, "form": form}
     return render(request, "base/afhaalactie.html", context)
+
+
+def afhaalactie_delete(request, pk):
+    collecting = Collection.objects.get(pk=pk)
+    collecting.delete()
+    return redirect("afhaalactie")

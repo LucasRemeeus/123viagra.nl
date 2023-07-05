@@ -13,7 +13,7 @@
         <strong>Datum:</strong> {{ collection.date }} <br>
         <strong>Opgehaald:</strong> {{ collection.collected }} <br>
         <strong>Approved:</strong> {{ collection.collectedApproved }} - {{ collection.collectedApprovedBy }} <br>
-
+        <a href="{% url 'afhaalactiedelete' collection.pk %}">Delete</a> <br>
         <br>
 
     {%  endfor %}
