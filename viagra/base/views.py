@@ -1,20 +1,52 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
-from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.forms import UserCreationForm, PasswordChangeForm
 from django.contrib.auth import login
 from django.contrib import messages
 
 from .forms import medicijnForm, RegisterUserForm, CollectionForm
-from .models import Medicine, Collection
+from .models import Medicine, Collection, Profile
 
 
 # Create your views here.
 
 @login_required
 def index(request):
-    context = {}
+    profile = Profile.objects.get(user=request.user)
+
+    context = {"profile": profile}
     return render(request, "base/index.html", context)
+
+
+@login_required
+def profile_edit(request):
+    profile = Profile.objects.get(user=request.user)
+    if request.method == "POST":
+        form = RegisterUserForm(request.POST, instance=profile)
+        if form.is_valid():
+            form.save()
+            return redirect("index")
+    else:
+        form = RegisterUserForm(instance=profile)
+
+    context = {"form": form, "profile": profile}
+    return render(request, "base/profile_edit.html", context)
+
+
+@login_required
+def password_edit(request):
+    profile = Profile.objects.get(user=request.user)
+    if request.method == "POST":
+        form = PasswordChangeForm(user=request.user, data=request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect("login")
+    else:
+        form = PasswordChangeForm(user=request.user, data=request.POST)
+
+    context = {"form": form, "profile": profile}
+    return render(request, "base/password_edit.html", context)
 
 
 def register(request):
@@ -70,6 +102,7 @@ def medicijnen_edit(request, pk):
     return render(request, "base/medicijnen.html", context)
 
 
+@login_required
 def medicijn_delete(request, pk):
     medicijn = Medicine.objects.get(pk=pk)
     medicijn.delete()
@@ -99,12 +132,14 @@ def afhaalactie(request):
     return render(request, "base/afhaalactie.html", context)
 
 
+@login_required
 def afhaalactie_delete(request, pk):
     collecting = Collection.objects.get(pk=pk)
     collecting.delete()
     return redirect("afhaalactie")
 
 
+@login_required
 def afhaalactie_afhalen(request, pk):
     collecting = Collection.objects.get(pk=pk)
     collecting.collected = True
@@ -112,6 +147,7 @@ def afhaalactie_afhalen(request, pk):
     return redirect("afhaalactie")
 
 
+@login_required
 def afhaalactie_aproven(request, pk):
     collecting = Collection.objects.get(pk=pk)
     if collecting.collected:

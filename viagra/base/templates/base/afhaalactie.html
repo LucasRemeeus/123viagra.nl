@@ -1,75 +1,94 @@
 {% extends 'base/base.html' %}
 
 {% block content %}
-<div class="row">
-    <div class="col-12">
-        {% if user.is_staff %}
-            <form method="post">
-                {% csrf_token %}
-                {{ form.as_p }}
-                <input type="submit" class="btn btn-primary" value="Save">
-                {% if pk != None %}
-                    <a href="{% url 'medicijnen' '' %}">Edit</a>
-                {% endif %}
-            </form>
-        {% endif %}
-    </div>
-</div>
-<br>
-<hr>
-<h2>Afhaal</h2>
-<div class="row row-cols-xl-4 row-cols-md-3 row-cols-sm-1 g-3">
-    {% for collection in collections %}
-        <div class="col">
-            <div class="card" style="width: 18rem;">
-                <div class="card-body">
-                    <h5 class="card-title">{{ collection.medicine }}</h5>
-                    <hr>
-                    <strong>Naam:</strong> {{ collection.user.username }} <br>
-                    <strong>Medicijn:</strong> {{ collection.medicine }} <br>
-                    <strong>Datum:</strong> {{ collection.date }} <br>
-                    <strong>Opgehaald:</strong> {{ collection.collected }} <br>
-                    <strong>Approved:</strong> {{ collection.collectedApproved }} - {{ collection.collectedApprovedBy }}
-                    <hr>
-                    {% if user.is_staff %}
-                        <a href="{% url 'afhaalactiedelete' collection.pk %}" class="btn btn-danger">Delete</a>
-                        {% if collection.collected and not collection.collectedApproved %}
-                            <a href="{% url 'afhaalactie_aproven' collection.pk %}" class="btn btn-info">Approved</a>
-                        {% endif %}
-                    {% endif %}
-                    {% if not collection.collected and user == collection.user %}
-                        <a href="{% url 'afhaalactie_afhalen' collection.pk %}" class="btn btn-success">Opgehaald</a>
-                    {% endif %}
-                </div>
+    {% if user.is_staff %}
+        <div class="row">
+            <div class="col-3">
+                <button class="btn btn-primary" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#afhaal"
+                        aria-expanded="false" aria-controls="collapseExample">
+                    <span>Maak afhaal</span>
+                </button>
             </div>
-        </div>
-    {% endfor %}
-    </div>
-    {% if collectionsapproved is not None %}
-        <hr>
-        <h2>Afgehaald</h2>
-        <div class="row row-cols-xl-4 row-cols-md-3 row-cols-sm-1 g-3" >
-        {% for collection1 in collectionsapproved %}
-            <div class="col">
-                <div class="card" style="width: 18rem;">
-                    <div class="card-body">
-                        <h5 class="card-title">{{ collection1.medicine }}</h5>
-                        <hr>
-                        <strong>Naam:</strong> {{ collection1.user.username }} <br>
-                        <strong>Medicijn:</strong> {{ collection1.medicine }} <br>
-                        <strong>Datum:</strong> {{ collection1.date }} <br>
-                        <strong>Opgehaald:</strong> {{ collection1.collected }} <br>
-                        <strong>Approved:</strong> {{ collection1.collectedApproved }} - {{ collection1.collectedApprovedBy }}
-                        <hr>
+            <br><br>
+            <div class="collapse" id="afhaal">
+                <div class="card card-body">
+                    <div class="col-12">
                         {% if user.is_staff %}
-                            <a href="{% url 'afhaalactiedelete' collection1.pk %}" class="btn btn-danger">Delete</a>
+                            <form method="post">
+                                {% csrf_token %}
+                                {{ form.as_p }}
+                                <input type="submit" class="btn btn-primary" value="Save">
+                                {% if pk != None %}
+                                    <a href="{% url 'medicijnen' '' %}">Edit</a>
+                                {% endif %}
+                            </form>
                         {% endif %}
                     </div>
                 </div>
             </div>
-
-        {% endfor %}
         </div>
     {% endif %}
-</div>
+
+    <br>
+    <hr>
+
+    <h2>Afhaal</h2>
+    <div class="row row-cols-xl-4 row-cols-md-3 row-cols-sm-1 g-3">
+        {% for collection in collections %}
+            <div class="col">
+                <div class="card" style="width: 18rem;">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ collection.medicine }}</h5>
+                        <hr>
+                        <strong>Naam:</strong> {{ collection.user.username }} <br>
+                        <strong>Medicijn:</strong> {{ collection.medicine }} <br>
+                        <strong>Datum:</strong> {{ collection.date }} <br>
+                        <strong>Opgehaald:</strong> {{ collection.collected }} <br>
+                        <strong>Approved:</strong> {{ collection.collectedApproved }}
+                        - {{ collection.collectedApprovedBy }}
+                        <hr>
+                        {% if user.is_staff %}
+                            <a href="{% url 'afhaalactiedelete' collection.pk %}" class="btn btn-danger">Delete</a>
+                            {% if collection.collected and not collection.collectedApproved %}
+                                <a href="{% url 'afhaalactie_aproven' collection.pk %}"
+                                   class="btn btn-info">Approved</a>
+                            {% endif %}
+                        {% endif %}
+                        {% if not collection.collected and user == collection.user %}
+                            <a href="{% url 'afhaalactie_afhalen' collection.pk %}"
+                               class="btn btn-success">Opgehaald</a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+    {% if collectionsapproved is not None %}
+        <hr>
+        <h2>Afgehaald</h2>
+        <div class="row row-cols-xl-4 row-cols-md-3 row-cols-sm-1 g-3">
+            {% for collection1 in collectionsapproved %}
+                <div class="col">
+                    <div class="card" style="width: 18rem;">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ collection1.medicine }}</h5>
+                            <hr>
+                            <strong>Naam:</strong> {{ collection1.user.username }} <br>
+                            <strong>Medicijn:</strong> {{ collection1.medicine }} <br>
+                            <strong>Datum:</strong> {{ collection1.date }} <br>
+                            <strong>Opgehaald:</strong> {{ collection1.collected }} <br>
+                            <strong>Approved:</strong> {{ collection1.collectedApproved }}
+                            - {{ collection1.collectedApprovedBy }}
+                            <hr>
+                            {% if user.is_staff %}
+                                <a href="{% url 'afhaalactiedelete' collection1.pk %}" class="btn btn-danger">Delete</a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+            {% endfor %}
+        </div>
+    {% endif %}
 {% endblock %}

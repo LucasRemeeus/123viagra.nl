@@ -2,5 +2,27 @@
 {% load static %}
 
 {% block content %}
-    123viagra.nl
-{% endblock content %}
+    <div class="row">
+        <div class="col-12">
+            <h1>Welkom {{ profile }}</h1>
+            <hr>
+            <div class="mb-3">
+                <label for="exampleFormControlTextarea1" class="form-label">Bio tekst:</label>
+                <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"
+                          disabled>{{ profile.bioText }}</textarea>
+            </div>
+            <div class="mb-3">
+                <label for="exampleFormControlInput1" class="form-label">Stad:</label>
+                <input type="text" class="form-control" id="exampleFormControlInput1" placeholder="{{ profile.city }}" disabled>
+            </div>
+            <div class="mb-3">
+                <label for="exampleFormControlInput1" class="form-label">Geboortedatum:</label>
+                <input type="text" class="form-control" id="exampleFormControlInput1" placeholder="{{ profile.dateOfBirth }}" disabled>
+            </div>
+            <br>
+            <a href="{% url 'profile_edit' %}" class="btn btn-warning">Wijzig profiel</a>
+            <a href="{% url 'password_edit' %}" class="btn btn-warning">Wijzig wachtwoord</a>
+            <hr>
+        </div>
+    </div>
+{% endblock %}
