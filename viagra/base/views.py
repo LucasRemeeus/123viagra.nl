@@ -81,9 +81,11 @@ def afhaalactie(request):
     user = request.user
 
     if user.is_staff:
-        collectionlijst = Collection.objects.all()
+        collectionlijst = Collection.objects.filter(collectedApproved=False)
+        collectionlijstapproved = Collection.objects.filter(collectedApproved=True)
     else:
         collectionlijst = Collection.objects.filter(user=user)
+        collectionlijstapproved = Collection.objects.filter(collectedApproved=True, user=request.user)
 
     if request.method == "POST":
         form = CollectionForm(request.POST)
@@ -93,7 +95,7 @@ def afhaalactie(request):
     else:
         form = CollectionForm()
 
-    context = {'collections': collectionlijst, "form": form}
+    context = {'collections': collectionlijst, 'collectionsapproved': collectionlijstapproved, "form": form}
     return render(request, "base/afhaalactie.html", context)
 
 

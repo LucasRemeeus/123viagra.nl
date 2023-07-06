@@ -44,5 +44,32 @@
             </div>
         </div>
     {% endfor %}
+    </div>
+    {% if collectionsapproved is not None %}
+        <hr>
+        <h2>Afgehaald</h2>
+        <div class="row row-cols-xl-4 row-cols-md-3 row-cols-sm-1 g-3" >
+        {% for collection1 in collectionsapproved %}
+            <div class="col">
+                <div class="card" style="width: 18rem;">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ collection1.medicine }}</h5>
+                        <hr>
+                        <strong>Naam:</strong> {{ collection1.user.username }} <br>
+                        <strong>Medicijn:</strong> {{ collection1.medicine }} <br>
+                        <strong>Datum:</strong> {{ collection1.date }} <br>
+                        <strong>Opgehaald:</strong> {{ collection1.collected }} <br>
+                        <strong>Approved:</strong> {{ collection1.collectedApproved }} - {{ collection1.collectedApprovedBy }}
+                        <hr>
+                        {% if user.is_staff %}
+                            <a href="{% url 'afhaalactiedelete' collection1.pk %}" class="btn btn-danger">Delete</a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+        {% endfor %}
+        </div>
+    {% endif %}
 </div>
 {% endblock %}
