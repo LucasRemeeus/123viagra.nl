@@ -1,20 +1,44 @@
 {% extends 'base/base.html' %}
 
 {% block content %}
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <input type="submit" value="Save"> {% if pk != None %} <a href="{% url 'medicijnen' '' %}">Edit</a> {% endif %}
-    </form>
-    <h2>Afhaal</h2>
+<div class="row">
+    <div class="col-12">
+        {% if user.is_staff %}
+            <form method="post">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <input type="submit" class="btn btn-primary" value="Save">
+                {% if pk != None %}
+                    <a href="{% url 'medicijnen' '' %}">Edit</a>
+                {% endif %}
+            </form>
+        {% endif %}
+    </div>
+</div>
+<br>
+<hr>
+<h2>Afhaal</h2>
+<div class="row row-cols-xl-4 row-cols-md-3 row-cols-sm-1 g-3">
     {% for collection in collections %}
-        <strong>Naam:</strong> {{ collection.user.username }} <br>
-        <strong>Medicijn:</strong> {{ collection.medicine }} <br>
-        <strong>Datum:</strong> {{ collection.date }} <br>
-        <strong>Opgehaald:</strong> {{ collection.collected }} <br>
-        <strong>Approved:</strong> {{ collection.collectedApproved }} - {{ collection.collectedApprovedBy }} <br>
-        <a href="{% url 'afhaalactiedelete' collection.pk %}">Delete</a> <br>
-        <br>
-
-    {%  endfor %}
-{% endblock content %}
+        <div class="col">
+            <div class="card" style="width: 18rem;">
+                <div class="card-body">
+                    <h5 class="card-title">{{ collection.medicine }}</h5>
+                    <hr>
+                    <strong>Naam:</strong> {{ collection.user.username }} <br>
+                    <strong>Medicijn:</strong> {{ collection.medicine }} <br>
+                    <strong>Datum:</strong> {{ collection.date }} <br>
+                    <strong>Opgehaald:</strong> {{ collection.collected }} <br>
+                    <strong>Approved:</strong> {{ collection.collectedApproved }} - {{ collection.collectedApprovedBy }}
+                    <hr>
+                    {% if user.is_staff %}
+                        <a href="{% url 'afhaalactiedelete' collection.pk %}" class="btn btn-danger">Delete</a>
+                        <a href="{% url 'afhaalactiedelete' collection.pk %}" class="btn btn-info">Approved</a>
+                    {% endif %}
+                    <a href="{% url 'afhaalactiedelete' collection.pk %}" class="btn btn-success">Opgehaald</a>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+</div>
+{% endblock %}

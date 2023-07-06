@@ -1,19 +1,53 @@
 {% extends 'base/base.html' %}
 
 {% block content %}
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <input type="submit" value="Save"> {% if pk != None %} <a href="{% url 'medicijnen' '' %}">Edit</a> {% endif %}
-    </form>
-    <h2>Medicijnen</h2>
-    {% for medicijn in medicijnen %}
-        <strong>Naam:</strong> {{ medicijn.name }} <br>
-        <strong>Maaker:</strong> {{ medicijn.manufacturer }} <br>
-        <strong>genezing:</strong> {{ medicijn.cures }} <br>
-        <strong>Bijeffect:</strong> {{ medicijn.sideEffects }} <br>
-        <a href="{% url 'medicijnen' medicijn.pk %}">Edit</a> <a href="{% url 'medicijnendelete' medicijn.pk %}">Delete</a><br>
-        <br>
+    {% if user.is_staff %}
+        <div class="row">
+            <div class="col-3">
+                <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#medicijn"
+                        aria-expanded="false" aria-controls="collapseExample">
+                    <span>Maak medicijn aan</span>
+                </button>
+            </div>
+            <br><br>
+            <div class="collapse" id="medicijn">
+                <div class="card card-body">
+                    <div class="col-12">
+                        <form method="post">
+                            {% csrf_token %}
+                            {{ form.as_p }}
+                            <input type="submit" class="btn btn-primary" value="Save"> {% if pk != None %}
+                            <a href="{% url 'medicijnen' '' %}">Edit</a> {% endif %}
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endif %}
 
-    {%  endfor %}
-{% endblock content %}
+    <br>
+    <hr>
+
+    <h2>Medicijnen</h2>
+    <div class="row row-cols-xl-4 row-cols-md-3 row-cols-sm-1 g-3">
+        {% for medicijn in medicijnen %}
+            <div class="col">
+                <div class="card" style="width: 18rem;">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ medicijn.name }}</h5>
+                        <hr>
+                        <strong>Naam:</strong> {{ medicijn.name }} <br>
+                        <strong>Maker:</strong> {{ medicijn.manufacturer }} <br>
+                        <strong>genezing:</strong> {{ medicijn.cures }} <br>
+                        <strong>Bijeffect:</strong> {{ medicijn.sideEffects }} <br>
+                        <hr>
+                        {% if user.is_staff %}
+                            <a href="{% url 'medicijnen' medicijn.pk %}" class="btn btn-warning">Edit</a>
+                            <a href="{% url 'medicijnendelete' medicijn.pk %}" class="btn btn-danger">Delete</a><br>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}

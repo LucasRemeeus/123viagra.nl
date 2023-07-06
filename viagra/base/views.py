@@ -38,12 +38,6 @@ def register(request):
 
 
 @login_required
-def afhaalactie(request):
-    context = {}
-    return render(request, "base/afhaalactie.html", context)
-
-
-@login_required
 def medicijnen(request):
     medicijnenlijst = Medicine.objects.all()
 
@@ -84,7 +78,12 @@ def medicijn_delete(request, pk):
 
 @login_required
 def afhaalactie(request):
-    collectionlijst = Collection.objects.all()
+    user = request.user
+
+    if user.is_staff:
+        collectionlijst = Collection.objects.all()
+    else:
+        collectionlijst = Collection.objects.filter(user=user)
 
     if request.method == "POST":
         form = CollectionForm(request.POST)
