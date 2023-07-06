@@ -117,7 +117,7 @@ def afhaalactie(request):
         collectionlijst = Collection.objects.filter(collectedApproved=False)
         collectionlijstapproved = Collection.objects.filter(collectedApproved=True)
     else:
-        collectionlijst = Collection.objects.filter(user=user)
+        collectionlijst = Collection.objects.filter(user=user, collectedApproved=False)
         collectionlijstapproved = Collection.objects.filter(collectedApproved=True, user=request.user)
 
     if request.method == "POST":
