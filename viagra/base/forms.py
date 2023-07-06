@@ -51,6 +51,12 @@ class CollectionForm(forms.ModelForm):
         model = Collection
         fields = ("medicine", "user", "date")
         widgets = {
+            'medicine': forms.widgets.Select(attrs={
+                'class': "form-control"
+            }),
+            'user': forms.widgets.Select(attrs={
+                'class': "form-control"
+            }),
             'date': forms.widgets.DateInput(attrs={
                 'type': "date",
                 'class': "form-control"
