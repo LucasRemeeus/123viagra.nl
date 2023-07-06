@@ -33,9 +33,13 @@
                     <hr>
                     {% if user.is_staff %}
                         <a href="{% url 'afhaalactiedelete' collection.pk %}" class="btn btn-danger">Delete</a>
-                        <a href="{% url 'afhaalactiedelete' collection.pk %}" class="btn btn-info">Approved</a>
+                        {% if collection.collected and not collection.collectedApproved %}
+                            <a href="{% url 'afhaalactie_aproven' collection.pk %}" class="btn btn-info">Approved</a>
+                        {% endif %}
                     {% endif %}
-                    <a href="{% url 'afhaalactiedelete' collection.pk %}" class="btn btn-success">Opgehaald</a>
+                    {% if not collection.collected and user == collection.user %}
+                        <a href="{% url 'afhaalactie_afhalen' collection.pk %}" class="btn btn-success">Opgehaald</a>
+                    {% endif %}
                 </div>
             </div>
         </div>

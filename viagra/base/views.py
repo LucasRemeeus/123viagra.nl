@@ -101,3 +101,19 @@ def afhaalactie_delete(request, pk):
     collecting = Collection.objects.get(pk=pk)
     collecting.delete()
     return redirect("afhaalactie")
+
+
+def afhaalactie_afhalen(request, pk):
+    collecting = Collection.objects.get(pk=pk)
+    collecting.collected = True
+    collecting.save()
+    return redirect("afhaalactie")
+
+
+def afhaalactie_aproven(request, pk):
+    collecting = Collection.objects.get(pk=pk)
+    if collecting.collected:
+        collecting.collectedApproved = True
+        collecting.collectedApprovedBy = request.user
+        collecting.save()
+    return redirect("afhaalactie")

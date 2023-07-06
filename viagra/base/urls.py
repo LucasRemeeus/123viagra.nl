@@ -10,4 +10,6 @@ urlpatterns = [
     path("medicijnendelete/<str:pk>", views.medicijn_delete, name="medicijnendelete"),
     path("afhaalactie/", views.afhaalactie, name="afhaalactie"),
     path("afhaalactiedelete/<str:pk>", views.afhaalactie_delete, name="afhaalactiedelete"),
+    path("afhaalactie_afhalen/<str:pk>", views.afhaalactie_afhalen, name="afhaalactie_afhalen"),
+    path("afhaalactie_aproven/<str:pk>", views.afhaalactie_aproven, name="afhaalactie_aproven"),
 ]
